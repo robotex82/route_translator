@@ -36,7 +36,7 @@ module ActionDispatch
         mapping = Mapping.build(@scope, @set, ast, controller, default_action, to, via, formatted, options_constraints, anchor, options)
 
         if @localized
-          @set.add_localized_route(mapping, ast, as, anchor)
+          @set.add_localized_route(mapping, ast, as, anchor, @scope, path, controller, default_action, to, via, formatted, options_constraints, options)
         else
           @set.add_route(mapping, ast, as, anchor)
         end

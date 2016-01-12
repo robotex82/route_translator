@@ -38,26 +38,31 @@ module RouteTranslator
       end
     end
 
-    def self.translations_for(app, conditions, requirements, defaults, route_name, anchor, route_set, &block)
-      add_untranslated_helpers_to_controllers_and_views(route_name, route_set.named_routes)
+    def self.translations_for(scope, mapping, path_ast, name, path, controller, default_action, to, via, formatted, options_constraints, anchor, options, route_set, &block)
+      add_untranslated_helpers_to_controllers_and_views name, route_set.named_routes
 
       available_locales.each do |locale|
-        new_conditions = conditions.dup
         begin
-          new_conditions[:path_info] = translate_path(conditions[:path_info], locale)
+          translated_path = translate_path(path, locale)
         rescue I18n::MissingTranslationData => e
           raise e unless RouteTranslator.config.disable_fallback
           next
         end
-        new_conditions[:parsed_path_info] = ActionDispatch::Journey::Parser.new.parse(new_conditions[:path_info]) if conditions[:parsed_path_info]
-        if new_conditions[:required_defaults] && !new_conditions[:required_defaults].include?(RouteTranslator.locale_param_key)
-          new_conditions[:required_defaults] << RouteTranslator.locale_param_key
+
+        translated_path_ast = ::ActionDispatch::Journey::Parser.parse(translated_path)
+
+        if !options.include?(RouteTranslator.locale_param_key)
+          options.merge! RouteTranslator.locale_param_key => locale.to_s.gsub('native_', '')
         end
-        new_defaults = defaults.merge(RouteTranslator.locale_param_key => locale.to_s.gsub('native_', ''))
-        new_requirements = requirements.merge(RouteTranslator.locale_param_key => locale.to_s)
-        new_route_name = translate_name(route_name, locale)
-        new_route_name = nil if new_route_name && route_set.named_routes.routes[new_route_name.to_sym] # TODO: Investigate this :(
-        block.call(app, new_conditions, new_requirements, new_defaults, new_route_name, anchor)
+        options_constraints.merge! RouteTranslator.locale_param_key => locale.to_s
+
+        translated_name = translate_name(name, locale)
+        # TODO: Investigate this :(
+        translated_name = nil if translated_name && route_set.named_routes.route_defined?(translated_name)
+
+        translated_mapping = ::ActionDispatch::Routing::Mapper::Mapping.build(scope, route_set, translated_path_ast, controller, default_action, to, via, formatted, options_constraints, anchor, options)
+
+        block.call translated_mapping, translated_path_ast, translated_name, anchor
       end
     end
 
