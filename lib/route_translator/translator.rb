@@ -58,7 +58,7 @@ module RouteTranslator
 
         translated_name = translate_name(name, locale)
         # TODO: Investigate this :(
-        translated_name = nil if translated_name && route_set.named_routes.route_defined?(translated_name)
+        translated_name = nil if translated_name && route_set.named_routes.send(:routes)[translated_name.to_sym]
 
         translated_mapping = ::ActionDispatch::Routing::Mapper::Mapping.build(scope, route_set, translated_path_ast, controller, default_action, to, via, formatted, options_constraints, anchor, options)
 
