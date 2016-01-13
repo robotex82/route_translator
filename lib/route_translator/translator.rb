@@ -38,7 +38,7 @@ module RouteTranslator
       end
     end
 
-    def self.translations_for(scope, mapping, path_ast, name, path, controller, default_action, to, via, formatted, options_constraints, anchor, options, route_set, &block)
+    def self.translations_for(scope, route_set, name, path, controller, default_action, to, via, formatted, options_constraints, anchor, options, &block)
       add_untranslated_helpers_to_controllers_and_views name, route_set.named_routes
 
       available_locales.each do |locale|
@@ -51,10 +51,12 @@ module RouteTranslator
 
         translated_path_ast = ::ActionDispatch::Journey::Parser.parse(translated_path)
 
-        unless options.include?(RouteTranslator.locale_param_key)
+        if options.include?(RouteTranslator.locale_param_key)
+          options_constraints.merge! RouteTranslator.locale_param_key => options[RouteTranslator.locale_param_key]
+        else
           options.merge! RouteTranslator.locale_param_key => locale.to_s.gsub('native_', '')
+          options_constraints.merge! RouteTranslator.locale_param_key => locale.to_s
         end
-        options_constraints.merge! RouteTranslator.locale_param_key => locale.to_s
 
         translated_name = translate_name(name, locale)
         # TODO: Investigate this :(

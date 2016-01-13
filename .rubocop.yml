@@ -25,7 +25,7 @@ Metrics/ModuleLength:
   Max: 126 # TODO: Lower to 100
 
 Metrics/ParameterLists:
-  Max: 15
+  Max: 13
 
 Metrics/PerceivedComplexity:
   Max: 9 # TODO: Lower to 7
