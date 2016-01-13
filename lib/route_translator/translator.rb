@@ -51,7 +51,7 @@ module RouteTranslator
 
         translated_path_ast = ::ActionDispatch::Journey::Parser.parse(translated_path)
 
-        if !options.include?(RouteTranslator.locale_param_key)
+        unless options.include?(RouteTranslator.locale_param_key)
           options.merge! RouteTranslator.locale_param_key => locale.to_s.gsub('native_', '')
         end
         options_constraints.merge! RouteTranslator.locale_param_key => locale.to_s
