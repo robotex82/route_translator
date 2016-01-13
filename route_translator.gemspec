@@ -26,4 +26,5 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'rails', '>= 5.0.0.beta1', '< 5.1'
   spec.add_development_dependency 'rubocop', '~> 0.36.0'
   spec.add_development_dependency 'simplecov', '~> 0.11.1'
+  spec.add_development_dependency 'byebug', '~> 8.2'
 end
