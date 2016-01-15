@@ -22,13 +22,13 @@ Metrics/MethodLength:
   Max: 24
 
 Metrics/ModuleLength:
-  Max: 122 # TODO: Lower to 100
+  Max: 115 # TODO: Lower to 100
 
 Metrics/ParameterLists:
   Max: 13
 
 Metrics/PerceivedComplexity:
-  Max: 9 # TODO: Lower to 7
+  Max: 10 # TODO: Lower to 7
 
 Rails:
   Enabled: true
