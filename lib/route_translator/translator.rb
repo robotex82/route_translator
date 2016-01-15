@@ -52,7 +52,7 @@ module RouteTranslator
         translated_options = options.dup
 
         unless translated_options.include?(RouteTranslator.locale_param_key)
-          translated_options.merge! RouteTranslator.locale_param_key => locale.to_s.gsub('native_', '')
+          translated_options[RouteTranslator.locale_param_key] = locale.to_s.gsub('native_', '')
         end
 
         translated_name = translate_name(name, locale)
