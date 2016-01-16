@@ -31,7 +31,7 @@ module RouteTranslator
       end
     end
 
-    def self.translations_for(route_set, path, name, options, &block)
+    def self.translations_for(route_set, path, name, options_constraints, options, &block)
       add_untranslated_helpers_to_controllers_and_views name, route_set.named_routes
 
       available_locales.each do |locale|
@@ -43,16 +43,18 @@ module RouteTranslator
         end
 
         translated_options = options.dup
+        translated_options_constraints = options_constraints.dup
 
         unless translated_options.include?(RouteTranslator.locale_param_key)
           translated_options[RouteTranslator.locale_param_key] = locale.to_s.gsub('native_', '')
         end
+        translated_options_constraints[RouteTranslator.locale_param_key] = locale.to_s
 
         translated_name = translate_name(name, locale)
         # TODO: Investigate this :(
         translated_name = nil if translated_name && route_set.named_routes.send(:routes)[translated_name.to_sym]
 
-        block.call translated_name, translated_path, translated_options
+        block.call translated_name, translated_path, translated_options_constraints, translated_options
       end
     end
 
