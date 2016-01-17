@@ -32,8 +32,8 @@ module RouteTranslator
         end
 
         # Including the named routes helpers module
-        [ActionController::TestCase, ActionView::TestCase, ActionMailer::TestCase].each do |klass|
-          klass.__send__(:include, helper_container)
+        %w[ActionController::TestCase ActionView::TestCase ActionMailer::TestCase].each do |klass_name|
+          klass_name.constantize.__send__(:include, helper_container) if Object.const_defined?(klass_name)
         end
       end
     end

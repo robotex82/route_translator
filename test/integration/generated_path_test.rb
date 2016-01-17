@@ -58,4 +58,13 @@ class GeneratedPathTest < integration_test_suite_parent_class
     assert_response :success
     assert_equal(response.body, '10')
   end
+
+  def test_with_engine_inside_localized_block
+    config_default_locale_settings 'es'
+    config_generate_unlocalized_routes false
+
+    get '/es/engine'
+    assert_response :success
+    assert_equal(response.body, '/es/blorgh/posts')
+  end
 end

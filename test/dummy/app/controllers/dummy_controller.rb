@@ -19,4 +19,8 @@ class DummyController < ActionController::Base
   def native
     render text: show_path
   end
+
+  def engine
+    render text: blorgh.posts_path
+  end
 end

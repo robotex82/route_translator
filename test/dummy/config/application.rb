@@ -6,7 +6,6 @@ begin
 rescue LoadError
   ''
 end
-
 require 'route_translator'
 
 module Dummy
@@ -16,3 +15,14 @@ module Dummy
     config.eager_load = false
   end
 end
+
+module Blorgh
+  class Engine < ::Rails::Engine
+    isolate_namespace Blorgh
+
+    routes.draw do
+      resources :posts, only: :index
+    end
+  end
+end
+
